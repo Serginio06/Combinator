@@ -9,21 +9,31 @@
 </head>
 <body>
 <div ng-controller="InputController as inputCtrl">
-    <input id='userInput' type="text" ng-model="inputCtrl.userSentence"><br>
-    <button ng-click="SubmitSentence()">Submit sentence</button>
+    <input id='sentence' type="text" ng-model="inputCtrl.userSentence" ng-keyup="inputCtrl.clearOptions()"><br>
+    <button ng-click="inputCtrl.SubmitSentence()">Submit sentence</button>
 
     <div ng-if="inputCtrl.isSentenceSubmited">
 
         <ul>
             <li ng-repeat="category in inputCtrl.categories">
-                <input type="text" ng-model="category">
+                Please input options for '{{category.categoryName}}' category:
+                <br>
+                <ol>
+                    <li ng-repeat="option in inputCtrl.categoryOptions[$index]">
+                        <input type="text" ng-model="optionValue">
+                        <button ng-click="inputCtrl.addOption( $parent.$index, optionValue)">Add option</button>
+                    </li>
+                </ol>
+
             </li>
         </ul>
-        <button ng-click="SubmitOptions()">Create options</button>
+        <button ng-click="inputCtrl.SubmitOptions()">Create options</button>
+
+
     </div>
     <div ng-if="inputCtrl.showOptions">
         <ol>
-            <li ng-repeat="option in inputCtrl.options">
+            <li ng-repeat="option in inputCtrl.sentencesOptions">
                 {{option}}
             </li>
         </ol>

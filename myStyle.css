@@ -1,5 +1,12 @@
-#userInput {
+#sentence {
     width: 50%;
+    font-size: 20px;
+    margin-bottom: 5px;
+
+}
+
+input {
+    width: 25%;
     font-size: 20px;
     margin-bottom: 5px;
 
@@ -10,4 +17,10 @@ button {
     color: white;
     background-color: blue;
     margin-bottom: 15px;
+}
+li {
+    font-size: 20px;
+    color: brown;
+    margin-bottom: 5px;
+
 }
