@@ -1,0 +1,23 @@
+.idea
+.DS_Store
+**/.DS_Store
+**/.idea
+**/.git
+**/node_modules/**
+mongodb/*
+*.mp4
+/frontend
+/Video
+*.log
+._user_data.csv
+**/npm-debug.log
+.DS_Store
+**/*.env
+# Node build artifacts
+node_modules
+npm-debug.log
+
+# Local development
+**/*.env
+**/*.dev
+
