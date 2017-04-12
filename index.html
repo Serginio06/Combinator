@@ -1,11 +1,34 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="combinatorMdl">
 <head>
     <meta charset="UTF-8">
-
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="myStyle.css">
     <title>Combinator</title>
 </head>
 <body>
+<div ng-controller="InputController as inputCtrl">
+    <input id='userInput' type="text" ng-model="inputCtrl.userSentence"><br>
+    <button ng-click="SubmitSentence()">Submit sentence</button>
 
+    <div ng-if="inputCtrl.isSentenceSubmited">
+
+        <ul>
+            <li ng-repeat="category in inputCtrl.categories">
+                <input type="text" ng-model="category">
+            </li>
+        </ul>
+        <button ng-click="SubmitOptions()">Create options</button>
+    </div>
+    <div ng-if="inputCtrl.showOptions">
+        <ol>
+            <li ng-repeat="option in inputCtrl.options">
+                {{option}}
+            </li>
+        </ol>
+    </div>
+
+</div>
 </body>
 </html>
