@@ -1,121 +1,106 @@
-/**
- * Created by sergiiivanchenko on 12/04/2017.
- */
 (
     function () {
-        "use strict";
 
-        angular.module ('combinatorMdl', [])
+        angular.module ('mainModule', [])
                .controller ('InputController', InputController)
-               .service ('sentenceAnalysisService', sentenceAnalysisService);
+               .service ('SentenceProcessingService', SentenceProcessingService);
 
 
-        InputController.$inject = ['sentenceAnalysisService'];
-
-        function InputController(sentenceAnalysisService) {
+        InputController.$inject = ['SentenceProcessingService'];
+        function InputController(SentenceProcessingService) {
             var inputCtrl = this;
-            inputCtrl.isSentenceSubmited = false;
-            inputCtrl.showOptions = false;
-            inputCtrl.categoryOptions = [[""]];
             inputCtrl.categories = [];
-            inputCtrl.sentencesOptions = [];
-
-
+            inputCtrl.options = [];
+            inputCtrl.showOptions = false;
+            inputCtrl.showSentences = false;
+            inputCtrl.sentences = [];
             inputCtrl.userSentence = "Above Grade Level [delivery method] quality tutoring assistance with some of the best [subject] tutors in [location].";
 
-            inputCtrl.clearOptions = function () {
-                inputCtrl.isSentenceSubmited = false;
-                inputCtrl.showOptions = false;
-                inputCtrl.categoryOptions = [[""]];
 
-                while (inputCtrl.categories.length > 0) {
-                    inputCtrl.categories.pop ();
-                }
-                while (inputCtrl.sentencesOptions.length > 0) {
-                    inputCtrl.sentencesOptions.pop ();
-                }
-            };
-
-            inputCtrl.SubmitSentence = function () {
-                if (inputCtrl.userSentence) {
-
-                    inputCtrl.categories = sentenceAnalysisService.getCatergories (inputCtrl.userSentence);
-                    initOptionsArray (inputCtrl.categories);
-                    inputCtrl.isSentenceSubmited = true;
-                }
-            };
-
-            inputCtrl.SubmitOptions = function () {
-                console.log (inputCtrl.categories);
+            inputCtrl.submitSentence = function () {
+                SentenceProcessingService.defineCategories (inputCtrl.userSentence);
                 inputCtrl.showOptions = true;
-                inputCtrl.sentencesOptions = sentenceAnalysisService.createSentencesOptions (inputCtrl.userSentence, inputCtrl.categories);
-
+                inputCtrl.categories = SentenceProcessingService.getCategories ();
             };
 
-            inputCtrl.addOption = function (categoryIndex, optionValue) {
+            inputCtrl.createSentences = function () {
 
-                inputCtrl.categories[categoryIndex].categoryValues[optionValue] = inputCtrl.categories[categoryIndex].categoryValues[optionValue];
-                // inputCtrl.categories[categoryIndex].categoryValues.push (optionValue);
-                inputCtrl.categoryOptions[categoryIndex].push (optionValue);
-
-                console.log (inputCtrl.categories[categoryIndex]);
-            };
-
-            var initOptionsArray = function (categoriesArray) {
-                for (var i = 0; i < inputCtrl.categories.length; i++) {
-                    inputCtrl.categories[i].categoryValues = [];
-                    inputCtrl.categories[i].categoryValues.push ("");
-                    inputCtrl.categoryOptions[i] = [""];
-                }
-            };
-
-
+                SentenceProcessingService.addCategoryOptions (inputCtrl.options);
+                // inputCtrl.categories = SentenceProcessingService.getCategories ();
+                inputCtrl.sentences = SentenceProcessingService.generateSentences (inputCtrl.userSentence);
+                inputCtrl.showSentences = true;
+                console.log ('cat with options= ', inputCtrl.categories);
+            }
         }
 
-        function sentenceAnalysisService() {
+
+        function SentenceProcessingService() {
             var service = this;
-            var categoriesObj = [];
-            var sentencesOptions = [];
+            var categories = [];
+            var sentences = [];
 
-            service.getCatergories = function (sentence) {
+            service.defineCategories = function (sentence) {
 
-                var categorisArray = sentence.match (/[^[\]]+(?=])/g);
+                var categoriesArray = [];
+                var obj2 = [];
+                categoriesArray = sentence.match (/[^[\]]+(?=])/g);
+                //   /[^[\]]+(?=])/g
 
-                for (var i = 0; i < categorisArray.length; i++) {
-                    var obj = {categoryName: categorisArray[i]};
-                    categoriesObj.push (obj);
-                }
-                console.log (categoriesObj);
-                return categoriesObj;
+
+                obj2.push (categoriesArray.map (function (item) {
+                    var obj = {};
+                    obj = {categoryName: item};
+                    console.log ('obj= ', obj);
+                    return obj;
+                }));
+
+                categories = obj2[0];
             };
 
-            service.createSentencesOptions = function (sentence, categories) {
-
-                var finSentenceArray = [];
-                var tempSentence = [];
-                tempSentence.push (sentence);
-
-                for (var i = 0; i < categories.length; i++) {
-                    finSentenceArray = replaceCategory (tempSentence, categories[i].categoryName, categories[i].categoryValues);
-                    tempSentence = finSentenceArray;
-                }
-
-                sentencesOptions = finSentenceArray;
-                return sentencesOptions;
+            service.getCategories = function () {
+                return categories;
             };
 
+            service.addCategoryOptions = function (options) {
 
-            function replaceCategory(initialArray, catname, catValues) {
-                var replacedSentencArray = [];
-                for (var n = 0; n < initialArray.length; n++) {
-                    for (var m = 0; m < catValues.length; m++) {
-                        replacedSentencArray.push (initialArray[n].replace ("[" + catname + "]", catValues[m]));
+                for (var i = 0; i < options.length; i++) {
+                    var categoryOptions = [];
+                    categories[i].categoryOptions = [];
+
+                    categoryOptions = options[i].split ('\n');
+                    categories[i].categoryOptions = categoryOptions;
+                }
+            };
+
+            service.generateSentences = function (userSentence) {
+
+                var changedSentences = [];
+                var tempSentences = [];
+                tempSentences.push (userSentence);
+
+                sentences[0] = 'temp sentence';
+
+                for (var n = 0; n < categories.length; n++) {
+                    // categories[n].categoryName;
+                    tempSentences = replaceCategoryWithOptions (categories[n], tempSentences);
+
+                }
+
+                console.log ('tempSentences=', tempSentences);
+                sentences = tempSentences;
+                return sentences;
+            };
+
+            var replaceCategoryWithOptions = function (category, tempSentences) {
+                var temSentence2 = [];
+
+                for (var m = 0; m < tempSentences.length; m++) {
+                    for (var b = 0; b < category.categoryOptions.length; b++) {
+                        temSentence2.push (tempSentences[m].replace ('[' + category.categoryName + ']', category.categoryOptions[b]));
                     }
                 }
-                return replacedSentencArray;
-
+                return temSentence2;
             }
-
 
         }
 
