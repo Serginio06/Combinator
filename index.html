@@ -20,8 +20,12 @@
                 <br>
                 <ol>
                     <li ng-repeat="option in inputCtrl.categoryOptions[$index]">
-                        <input type="text" ng-model="optionValue">
-                        <button ng-click="inputCtrl.addOption( $parent.$index, optionValue)">Add option</button>
+                    <!--<li ng-repeat="option in inputCtrl.categories[$index].categoryValues">-->
+                        <!--Options:{{inputCtrl.categories[$parent.$index].categoryValues[$index]}}-->
+                        <input type="text" ng-model="inputCtrl.categories[$parent.$index].categoryValues[$index]">
+                        <!--<input type="text" ng-model="optionValue">-->
+                        <!--<input type="text" ng-model="inputCtrl.categoryOptions[$parent.$index][$index]">-->
+                        <button ng-click="inputCtrl.addOption( $parent.$index, $index)">Add option</button>
                     </li>
                 </ol>
 
