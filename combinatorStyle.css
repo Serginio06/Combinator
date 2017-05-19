@@ -1,0 +1,39 @@
+* {
+    padding: 5px;
+    margin: 0;
+}
+
+p.example {
+    padding-bottom: 10px;
+    border-bottom: 2px dotted blue;
+
+}
+
+button {
+    border-width: 0;
+    background-image: -webkit-linear-gradient(#CCC666, #FF6500);
+
+}
+
+#senteceTextArea {
+    width:90%;
+    min-width: 200px;
+
+
+}
+
+.optionsTextArea{
+    width:30%;
+    min-width: 200px;
+    overflow: hidden;
+
+
+}
+h4  {
+    text-transform: uppercase;
+
+}
+
+ul {
+    list-style: none;
+}

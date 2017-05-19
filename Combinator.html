@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru" ng-app="combinatorModule">
+<head>
+    <meta charset="UTF-8">
+    <script src="angular.min.js"></script>
+    <script src="Combinator.js"></script>
+    <link rel="stylesheet" href="combinatorStyle.css">
+    <title>My Combinator on Angular 1</title>
+</head>
+<body>
+
+<div ng-controller="inputDataCtrl as inputCtrl">
+    <h1>Combinator</h1>
+    <p>Please enter your sentence below</p>
+    <p><span class="example">Example</span></p>
+    <p class="example">Above Grade Level [delivery method] quality tutoring assistance with some of the best [subject]
+        tutors in [location].</p>
+    <br>
+    <textarea id="senteceTextArea" type="text" id="sentenceInput" ng-model="inputCtrl.sentence"></textarea><br>
+    <button ng-click="inputCtrl.defineCategories()">Get Categories</button>
+
+
+    <div ng-controller="optionAndResultCtrl as resultCtrl">
+        <div ng-if="inputCtrl.categoriesIsShown">
+
+            <ul >
+                <li ng-repeat="category in resultCtrl.categories"><h4>{{category.name}}</h4>
+                    <textarea class="optionsTextArea" id="options{{$index}}" cols="30" rows="3"
+                              ng-model="resultCtrl.options[$index]"></textarea>
+                </li>
+            </ul>
+
+            <button ng-click="resultCtrl.applyOptionsToCategories()">Get sentences</button>
+
+        </div>
+        <div ng-if="resultCtrl.showSentences"><br>
+            <h3>Combined sentences</h3>
+            <ol>
+                <li ng-repeat="sentence in resultCtrl.combinedSentences">{{sentence}}</li>
+            </ol>
+
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
